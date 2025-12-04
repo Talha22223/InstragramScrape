@@ -1,0 +1,21 @@
+services:
+  # Combined Backend + Frontend Service
+  - type: web
+    name: instagram-scraper
+    runtime: python3
+    buildCommand: "./build.sh"
+    startCommand: "cd 'freelance prj/backend' && python app.py"
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: APIFY_API_KEY
+        sync: false
+      - key: PORT
+        value: 10000
+      - key: FLASK_ENV
+        value: production
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: NODE_VERSION
+        value: "18"
+    rootDir: ./
