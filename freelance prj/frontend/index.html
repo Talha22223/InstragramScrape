@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Comment Analyzer - AI Powered Sentiment Analysis</title>
+    <meta name="description" content="Analyze Instagram and Facebook comments with AI-powered sentiment analysis and topic classification">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="header-icons">
+                <i class="fab fa-instagram header-icon"></i>
+                <i class="fab fa-facebook header-icon"></i>
+            </div>
+            <h1>Social Media Comment Analyzer</h1>
+            <p>AI-Powered Sentiment Analysis & Topic Classification</p>
+            <p class="header-platforms">Instagram • Facebook (Groups, Pages, Profiles)</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- URL Input Section -->
+        <div id="inputSection" class="input-section">
+            <div class="url-input-card">
+                <div class="card-icon insta-logo">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                
+                <h2>Analyze Social Media Comments</h2>
+                <p class="subtitle">Choose platform and analysis mode</p>
+
+                <!-- Platform Selection -->
+                <div class="platform-selector">
+                    <button type="button" class="platform-btn active" data-platform="instagram">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </button>
+                    <button type="button" class="platform-btn" data-platform="facebook">
+                        <i class="fab fa-facebook"></i> Facebook Groups
+                    </button>
+                </div>
+
+                <!-- Mode Selection -->
+                <div class="mode-selector">
+                    <button type="button" class="mode-btn active" data-mode="single">
+                        <i class="fab fa-instagram"></i> Single Post
+                    </button>
+                    <button type="button" class="mode-btn" data-mode="profile">
+                        <i class="fas fa-user"></i> Bulk Analysis
+                    </button>
+                </div>
+
+                <form id="urlForm" class="url-form">
+                    <!-- Single Post Mode -->
+                    <div id="singleMode" class="mode-content">
+                        <div class="input-wrapper">
+                            <i class="fab fa-instagram input-icon" id="singleIcon"></i>
+                            <input 
+                                type="text" 
+                                id="urlInput" 
+                                placeholder="https://www.instagram.com/p/xxxxx or /reel/xxxxx"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Profile/Group Bulk Mode -->
+                    <div id="profileMode" class="mode-content" style="display: none;">
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon" id="bulkIcon"></i>
+                            <input 
+                                type="text" 
+                                id="profileUrlInput" 
+                                placeholder="https://www.instagram.com/username/"
+                            >
+                        </div>
+                        
+                        <div class="date-posts-row">
+                            <div class="input-wrapper date-input">
+                                <i class="fas fa-calendar input-icon"></i>
+                                <input 
+                                    type="date" 
+                                    id="fromDateInput"
+                                    max=""
+                                >
+                                <label class="input-label">From Date</label>
+                            </div>
+                            
+                            <div class="input-wrapper posts-input">
+                                <input 
+                                    type="number" 
+                                    id="maxPostsInput"
+                                    value="20"
+                                    min="1"
+                                    max="50"
+                                    class="small-input"
+                                >
+                                <label class="input-label">Max Posts</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="errorMessage" class="error-message" style="display: none;"></div>
+                    
+                    <button type="submit" class="analyze-button">
+                        <i class="fas fa-search"></i>
+                        <span id="analyzeButtonText">Analyze Post</span>
+                    </button>
+                </form>
+
+                <div class="info-section">
+                    <h3>What we analyze:</h3>
+                    <ul class="features-list">
+                        <li>✓ Sentiment Analysis (Positive/Negative/Neutral)</li>
+                        <li>✓ Topic Classification for Negative Comments</li>
+                        <li id="featureBulk">✓ Single post analysis</li>
+                        <li id="featurePlatform">✓ Instagram & Facebook Groups support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loadingSection" class="loading-section" style="display: none;">
+            <div class="spinner-wrapper">
+                <div class="spinner"></div>
+                <div class="loading-text">
+                    <h2>Analyzing Comments...</h2>
+                    <p>Scraping Instagram data and performing AI analysis</p>
+                    <div class="loading-steps">
+                        <div class="step">
+                            <div class="step-icon">📥</div>
+                            <span>Fetching comments</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">🤖</div>
+                            <span>AI Sentiment Analysis</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">🏷️</div>
+                            <span>Topic Classification</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="dashboard-section" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Analysis Results</h2>
+                <button id="resetButton" class="reset-button">
+                    <i class="fas fa-redo"></i> Analyze Another Post
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="statsGrid"></div>
+
+            <!-- Charts Section -->
+            <div class="charts-section" id="chartsSection">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Sentiment Distribution</h3>
+                    </div>
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+                <div class="chart-container" id="topicChartContainer" style="display: none;">
+                    <div class="chart-header">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Negative Comment Topics</h3>
+                    </div>
+                    <canvas id="topicChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <div class="comments-header">
+                    <h3>Comments Details</h3>
+                    <div class="tabs" id="commentTabs">
+                        <button class="tab-button active" data-filter="all">All (<span id="allCount">0</span>)</button>
+                        <button class="tab-button" data-filter="positive">Positive (<span id="positiveCount">0</span>)</button>
+                        <button class="tab-button" data-filter="negative">Negative (<span id="negativeCount">0</span>)</button>
+                        <button class="tab-button" data-filter="neutral">Neutral (<span id="neutralCount">0</span>)</button>
+                    </div>
+                </div>
+                <div class="comments-list" id="commentsList"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>Powered by BERT AI Model & Apify API</p>
+    </footer>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
