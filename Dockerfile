@@ -1,4 +1,4 @@
-# Use Python 3.11 slim image
+# Use Python 3.11 slim image for Instagram Scraper deployment
 FROM python:3.11-slim
 
 # Install Node.js
