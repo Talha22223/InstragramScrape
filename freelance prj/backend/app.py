@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -15,7 +15,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
 # Get API key from environment
@@ -65,6 +65,21 @@ def health_check():
             'topic_classifier': 'initialized'
         }
     }), 200
+
+# Serve React App
+@app.route('/')
+def serve_react_app():
+    """Serve the React application"""
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static_files(path):
+    """Serve static files for React app"""
+    try:
+        return send_from_directory(app.static_folder, path)
+    except:
+        # If file doesn't exist, serve index.html for React Router
+        return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/test-scraper', methods=['POST'])
 def test_scraper():

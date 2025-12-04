@@ -18,14 +18,15 @@ function App() {
     setAnalysisType(data.type);
 
     try {
-      let endpoint = '/api/analyze';
+      const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+      let endpoint = `${API_BASE_URL}/api/analyze`;
       let body = {};
 
       if (data.type === 'single') {
-        endpoint = '/api/analyze';
+        endpoint = `${API_BASE_URL}/api/analyze`;
         body = { url: data.url };
       } else {
-        endpoint = '/api/analyze-profile';
+        endpoint = `${API_BASE_URL}/api/analyze-profile`;
         body = {
           profile_url: data.profile_url,
           from_date: data.from_date,
